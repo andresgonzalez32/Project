@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- Importar ScrollPane -->
+
+<VBox prefHeight="900.0" prefWidth="1000.0" style="-fx-background-color: #ffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.VistatiendaController">
+   <children>
+      <!-- Barra Superior -->
+      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="72.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label prefHeight="46.0" prefWidth="254.0" text="Products Store" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="31.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Label>
+            <SplitMenuButton fx:id="SelecOptions" mnemonicParsing="false" prefHeight="44.0" prefWidth="169.0" style="-fx-background-color: #fff;" text="Options" HBox.hgrow="ALWAYS">
+              <items>
+                <MenuItem fx:id="WishList" mnemonicParsing="false" onAction="#ActioViewWishList" text="Wish List" />
+                <MenuItem fx:id="PurchaseHistory" mnemonicParsing="false" onAction="#ActionPurchaseHistory" text="Purchase History" />
+              </items>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </SplitMenuButton>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="CardStore" fitHeight="40.0" fitWidth="46.0" onMouseClicked="#ActionViewCardStore" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                     <image>
+                        <Image url="@../Imagenes/logo.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <VBox prefHeight="46.0" prefWidth="44.0">
+                     <children>
+                        <Label fx:id="CountCardStore" prefHeight="31.0" prefWidth="37.0" text="0">
+                           <font>
+                              <Font name="System Bold" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="97.0" prefWidth="199.0">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <children>
+                  <ImageView fitHeight="35.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                     <image>
+                        <Image url="@../Imagenes/usuario.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="NameUser" text="Name User">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="5.0" right="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <ImageView fx:id="ExitStore" fitHeight="35.0" fitWidth="52.0" onMouseClicked="#ActionExitStore" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Imagenes/salir.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
+         </padding>
+      </HBox>
+      
+      <!-- Contenedor de Productos -->
+      <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="1017.0" prefWidth="800.0">
+         <children>
+            <Label prefHeight="46.0" prefWidth="912.0" text="Products List">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Label>
+            
+            <!-- ScrollPane para permitir el scroll -->
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="753.0" prefWidth="899.0">
+                <!-- GridPane para mostrar productos dentro del ScrollPane -->
+                <content>
+                    <GridPane fx:id="gridPane" hgap="30.0" maxWidth="1.7976931348623157E308" prefHeight="246.0" prefWidth="698.0" style="-fx-background-color: #ffff;">
+                        <columnConstraints>
+                            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+                            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+                            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints fillHeight="false" maxHeight="278.0" minHeight="10.0" prefHeight="234.0" vgrow="ALWAYS" />
+                        </rowConstraints>
+                       <VBox.margin>
+                          <Insets bottom="10.0" />
+                       </VBox.margin>
+                    </GridPane>
+                </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets left="50.0" right="50.0" />
+         </padding>
+      </VBox>
+   </children>
+</VBox>
