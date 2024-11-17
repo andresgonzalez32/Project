@@ -71,7 +71,8 @@ public class VistaloginCController implements Initializable {
                 // Crear un nuevo stage para la vista de tienda
                 Stage stage = new Stage();
                 stage.setScene(scene);
-                stage.setResizable(false);
+                //stage.setResizable(false);
+                stage.setMaximized(true);
                 stage.show();
 
                 // Indicar qué hacer al cerrar la ventana de login
