@@ -1,0 +1,10 @@
+***** FACTURA *****
+Usuario: pepe12
+Fecha: 2024-11-19 13:06:43
+----------------------------
+Productos:
+- Producto 2, Cantidad: 5, Precio Unitario: $500000.0, Total: $2500000.0
+- Producto 1, Cantidad: 1, Precio Unitario: $12000.0, Total: $12000.0
+----------------------------
+TOTAL: $2512000,00
+***** GRACIAS POR SU COMPRA *****
