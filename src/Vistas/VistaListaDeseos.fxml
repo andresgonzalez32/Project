@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="900.0" prefWidth="1000.0" style="-fx-background-color: #ffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.VistaListaDeseosController">
+   <children>
+      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="72.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="home" onMouseClicked="#ActionHome" prefHeight="46.0" prefWidth="254.0" text="Products Store" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="31.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Label>
+            <SplitMenuButton fx:id="SelecOptions" mnemonicParsing="false" prefHeight="44.0" prefWidth="169.0" style="-fx-background-color: #fff;" text="Options" HBox.hgrow="ALWAYS">
+               <items>
+                  <MenuItem fx:id="WishList" mnemonicParsing="false" onAction="#ActioViewWishList" text="Wish List" />
+                  <MenuItem fx:id="PurchaseHistory" mnemonicParsing="false" onAction="#ActionPurchaseHistory" text="Purchase History" />
+               </items>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </SplitMenuButton>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="CardStore" fitHeight="40.0" fitWidth="46.0" onMouseClicked="#ActionViewCardStore" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                     <image>
+                        <Image url="@../Imagenes/logo.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <VBox prefHeight="46.0" prefWidth="46.0">
+                     <children>
+                        <Label fx:id="CountCardStore" text="0">
+                           <font>
+                              <Font name="System Bold" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="97.0" prefWidth="199.0">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <children>
+                  <ImageView fitHeight="35.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                     <image>
+                        <Image url="@../Imagenes/usuario.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="NameUser" text="Name User">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="5.0" right="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <ImageView fx:id="ExitStore" fitHeight="35.0" fitWidth="52.0" onMouseClicked="#ActionExitStore" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Imagenes/salir.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
+         </padding>
+      </HBox>
+      <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="1017.0" prefWidth="800.0">
+         <padding>
+            <Insets left="50.0" right="50.0" />
+         </padding>
+         <children>
+            <Label alignment="CENTER" prefHeight="86.0" prefWidth="262.0" text="Wish List" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Label>
+            <TableView fx:id="tableCardProducts" maxWidth="1.7976931348623157E308" prefHeight="410.0" prefWidth="400.0" tableMenuButtonVisible="true">
+               <columns>
+                  <TableColumn fx:id="colNameProduct" text="Name product" />
+                  <TableColumn fx:id="colPrice" text="Price" />
+                  <TableColumn fx:id="colAction" text="Action" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <HBox prefHeight="42.0" prefWidth="899.0" />
+         </children>
+      </VBox>
+   </children>
+</VBox>

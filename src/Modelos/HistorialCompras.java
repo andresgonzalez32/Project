@@ -21,6 +21,36 @@ public class HistorialCompras {
         this.historial = new LinkedList<>();
     }
 
+//    public void agregarCompra(List<ModeloProducto> productos, String usuario) {
+//        StringBuilder registro = new StringBuilder();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String fecha = sdf.format(new Date());
+//
+//        double totalCompra = 0.0;
+//
+//        registro.append("Usuario: ").append(usuario).append("\n");
+//        registro.append("Fecha: ").append(fecha).append("\n");
+//        registro.append("Productos:\n");
+//
+//        for (ModeloProducto producto : productos) {
+//            double totalProducto = producto.getPrice() * producto.getCantidadCarrito();
+//            totalCompra += totalProducto;
+//
+//            registro.append("- ").append(producto.getName())
+//                    .append(", Cantidad: ").append(producto.getCantidadCarrito())
+//                    .append(", Precio Unitario: $").append(producto.getPrice())
+//                    .append(", Total: $").append(totalProducto)
+//                    .append("\n");
+//        }
+//
+//        registro.append("TOTAL DE LA COMPRA: $").append(String.format("%.2f", totalCompra)).append("\n");
+//        registro.append("----------------------------------------------------\n");
+//        historial.add(registro.toString());
+//
+//        // Generar factura
+//        generarFactura(usuario, productos, totalCompra, fecha);
+//        JOptionPane.showMessageDialog(null, "Successfully generated invoice");
+//    }
     public void agregarCompra(List<ModeloProducto> productos, String usuario) {
         StringBuilder registro = new StringBuilder();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -91,7 +121,66 @@ public class HistorialCompras {
         }
     }
 
-
+//    public List<ProductoHistorial> cargarHistorial(String rutaArchivo, String usuarioFiltrado) {
+//        List<ProductoHistorial> productos = new ArrayList<>();
+//
+//        try (BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo))) {
+//            String linea;
+//            boolean agregarProductos = false;
+//            String fechaActual = null;
+//            double totalCompra = 0.0;
+//            StringBuilder productosEnCompra = new StringBuilder(); // Usado para concatenar los productos
+//
+//            while ((linea = reader.readLine()) != null) {
+//                linea = linea.trim();
+//
+//                // Verificar si es el usuario filtrado
+//                if (linea.startsWith("Usuario:")) {
+//                    String usuario = linea.split(":")[1].trim();
+//                    agregarProductos = usuario.equals(usuarioFiltrado);
+//                }
+//
+//                // Capturar la fecha de la compra
+//                if (agregarProductos && linea.startsWith("Fecha:")) {
+//                    // Si ya existe la compra con esta fecha, la agregamos
+//                    if (productosEnCompra.length() > 0) {
+//                        // Agregar la compra anterior antes de cambiar de fecha
+//                        productos.add(new ProductoHistorial(productosEnCompra.toString(), totalCompra, fechaActual));
+//                    }
+//                    fechaActual = linea.split(": ", 2)[1].trim();
+//                    productosEnCompra = new StringBuilder(); // Reiniciar para la nueva fecha
+//                }
+//
+//                // Leer los productos si es el usuario correcto
+//                if (agregarProductos && linea.startsWith("- ")) {
+//                    String[] partes = linea.substring(2).split(", ");
+//                    String nombre = partes[0]; // Nombre del producto
+//                    double precioTotal = Double.parseDouble(partes[3].split(": \\$")[1]); // Total de la compra
+//
+//                    // Concatenar el producto en la misma celda
+//                    if (productosEnCompra.length() > 0) {
+//                        productosEnCompra.append(", ");
+//                    }
+//                    productosEnCompra.append(nombre);
+//
+//                    totalCompra += precioTotal; // Acumular el total
+//                }
+//
+//                // Detectar el fin de los datos de un usuario
+//                if (linea.startsWith("TOTAL DE LA COMPRA:")) {
+//                    if (productosEnCompra.length() > 0) {
+//                        // Agregar la última compra
+//                        productos.add(new ProductoHistorial(productosEnCompra.toString(), totalCompra, fechaActual));
+//                    }
+//                    agregarProductos = false; // Detener hasta que aparezca el próximo usuario
+//                }
+//            }
+//        } catch (IOException | NumberFormatException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return productos;
+//    }
     public List<ProductoHistorial> cargarHistorial(String rutaArchivo, String usuarioFiltrado) {
         List<ProductoHistorial> productos = new ArrayList<>();
 

@@ -106,6 +106,7 @@ public class VistalistarproductosController implements Initializable {
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
                     stage.setScene(scene);
+                    stage.setMaximized(true);
                     stage.show();
 
                     stage.setOnCloseRequest(e -> {
@@ -152,6 +153,7 @@ public class VistalistarproductosController implements Initializable {
             // Crear un nuevo stage para la vista de login
             Stage stage = new Stage();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
 
             // Indicar qué hacer al cerrar la ventana de login
@@ -187,6 +189,7 @@ public class VistalistarproductosController implements Initializable {
             // Crear un nuevo stage para la vista de login
             Stage stage = new Stage();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
 
             // Indicar qué hacer al cerrar la ventana de login

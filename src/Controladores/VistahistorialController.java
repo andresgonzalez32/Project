@@ -167,6 +167,39 @@ public class VistahistorialController implements Initializable {
 
     @FXML
     private void ActioViewWishList(ActionEvent event) {
+        try {
+            // Cargar el archivo FXML de la vista de login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/VistaListaDeseos.fxml"));
+            Parent root = loader.load();
+
+            // Obtener el controlador de la nueva vista
+            VistaListaDeseosController controlador = loader.getController();
+
+            // Crear una nueva escena para la vista de login
+            Scene scene = new Scene(root);
+
+            // Crear un nuevo stage para la vista de login
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+
+            // Indicar qué hacer al cerrar la ventana de login
+            stage.setOnCloseRequest(e -> {
+                try {
+                    controlador.closeWindows("/Vistas/Vistahistorial.fxml", CardStore);  // Llamar al método para reabrir el menú
+                } catch (IOException ex) {
+                    Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+
+            // Cerrar la ventana del menú actual
+            Stage myStage = (Stage) this.CardStore.getScene().getWindow();
+            myStage.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML

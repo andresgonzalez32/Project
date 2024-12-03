@@ -2,6 +2,7 @@ package Controladores;
 
 import static Controladores.VistaloginCController.user;
 import Modelos.Carrito;
+import Modelos.ListaDeseo;
 import Modelos.ModeloArchivo;
 import Modelos.ModeloProducto;
 import javafx.fxml.FXML;
@@ -157,6 +158,7 @@ public class VistatiendaController implements Initializable {
     private VBox crearTarjetaProducto(ModeloProducto producto) {
 
         Carrito carrito = new Carrito();
+        ListaDeseo ld = new ListaDeseo();
         VBox vbox = new VBox();
         vbox.setId("productBox" + producto.getId()); // ID único basado en el ID del producto
         vbox.setAlignment(Pos.CENTER);
@@ -192,7 +194,11 @@ public class VistatiendaController implements Initializable {
         guardarButton.setMaxWidth(Double.MAX_VALUE); // Ocupa todo el ancho
         guardarButton.setOnMouseEntered(e -> guardarButton.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-background-color: #1e88e5; -fx-text-fill: white; -fx-border-radius: 5;"));
         guardarButton.setOnMouseExited(e -> guardarButton.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-background-color: #2196F3; -fx-text-fill: white; -fx-border-radius: 5;"));
-        guardarButton.setOnMouseClicked(e -> System.out.println("Has presionado el botón agregar a la lista de deseos"));
+        guardarButton.setOnMouseClicked(e -> {
+             ld.agregarProducto(producto, 1);
+             ld.guardarCarritoEnArchivo(NameUser.getText());
+            JOptionPane.showMessageDialog(null, "Product successfully added!");
+        });
 
         // Agregar los elementos al VBox
         vbox.getChildren().addAll(imagenProducto, nombreLabel, precioLabel, agregarButton, guardarButton);
@@ -241,6 +247,39 @@ public class VistatiendaController implements Initializable {
 
     @FXML
     private void ActioViewWishList(ActionEvent event) {
+        try {
+            // Cargar el archivo FXML de la vista de login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/VistaListaDeseos.fxml"));
+            Parent root = loader.load();
+
+            // Obtener el controlador de la nueva vista
+            VistaListaDeseosController controlador = loader.getController();
+
+            // Crear una nueva escena para la vista de login
+            Scene scene = new Scene(root);
+
+            // Crear un nuevo stage para la vista de login
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+
+            // Indicar qué hacer al cerrar la ventana de login
+            stage.setOnCloseRequest(e -> {
+                try {
+                    controlador.closeWindows("/Vistas/Vistatienda.fxml", CardStore);  // Llamar al método para reabrir el menú
+                } catch (IOException ex) {
+                    Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+
+            // Cerrar la ventana del menú actual
+            Stage myStage = (Stage) this.CardStore.getScene().getWindow();
+            myStage.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML

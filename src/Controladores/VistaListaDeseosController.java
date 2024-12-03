@@ -2,7 +2,7 @@ package Controladores;
 
 import static Controladores.VistaloginCController.user;
 import Modelos.Carrito;
-import Modelos.HistorialCompras;
+import Modelos.ListaDeseo;
 import Modelos.ModeloProducto;
 import java.io.IOException;
 import java.net.URL;
@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,11 +33,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
-public class VistacarritoController implements Initializable {
+public class VistaListaDeseosController implements Initializable {
 
+    @FXML
+    private Label home;
     @FXML
     private SplitMenuButton SelecOptions;
     @FXML
@@ -54,24 +56,17 @@ public class VistacarritoController implements Initializable {
     @FXML
     private ImageView ExitStore;
     @FXML
-    private Label home;
-    @FXML
     private TableView<ModeloProducto> tableCardProducts;
     @FXML
     private TableColumn<ModeloProducto, String> colNameProduct;
     @FXML
-    private TableColumn<ModeloProducto, Integer> colAmount;
-    @FXML
     private TableColumn<ModeloProducto, Double> colPrice;
     @FXML
-    private TableColumn<ModeloProducto, Double> colTotal;
-    @FXML
     private TableColumn<ModeloProducto, String> colAction;
-    @FXML
-    private Label CountTotal;
-    @FXML
-    private Button btnMakePayment;
 
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -79,25 +74,26 @@ public class VistacarritoController implements Initializable {
         Runnable tarea = new Runnable() {
             @Override
             public void run() {
-                Carrito carrito = new Carrito();
-                int totalProductos = carrito.obtenerTotalProductosEnArchivo(user);
+                ListaDeseo carrito = new ListaDeseo();
+                Carrito c = new Carrito();
+                int totalProductos = c.obtenerTotalProductosEnArchivo(user);
                 NameUser.setText(user);
 
                 Platform.runLater(() -> {
-                    CountCardStore.setText("" + totalProductos);
+                    CountCardStore.setText(String.valueOf(totalProductos));
 
                     List<ModeloProducto> productosDelCarrito = carrito.obtenerProductosDelArchivo(user);
                     ObservableList<ModeloProducto> observableProductos = FXCollections.observableArrayList(productosDelCarrito);
                     tableCardProducts.setItems(observableProductos);
 
                     colNameProduct.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-                    colAmount.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getCantidadCarrito()).asObject());
-                    colPrice.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
-                    colTotal.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice() * cellData.getValue().getCantidadCarrito()).asObject());
 
-                    colAction.setCellValueFactory(cellData -> new SimpleStringProperty("Delete"));
+                    colPrice.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
+
+                    colAction.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
                     colAction.setCellFactory(param -> new TableCell<ModeloProducto, String>() {
                         private final Button deleteButton = new Button("Delete");
+                        private final Button addButton = new Button("Add cart");
 
                         @Override
                         protected void updateItem(String item, boolean empty) {
@@ -107,6 +103,8 @@ public class VistacarritoController implements Initializable {
                             } else {
                                 setGraphic(deleteButton);
                                 deleteButton.setStyle("-fx-background-color: red; -fx-font-weight: bold; -fx-cursor: hand;");
+                                addButton.setStyle("-fx-background-color: green; -fx-font-weight: bold; -fx-cursor: hand;");
+
                                 deleteButton.setOnAction(event -> {
                                     ModeloProducto productoSeleccionado = getTableView().getItems().get(getIndex());
                                     String nombreProducto = productoSeleccionado.getName();
@@ -122,18 +120,44 @@ public class VistacarritoController implements Initializable {
                                         int nuevosTotalProductos = productosActualizados.size();
                                         CountCardStore.setText("" + nuevosTotalProductos);
 
-                                        // Recalcular el total directamente desde la tabla
-                                        double nuevoTotal = calcularTotalDesdeTabla();
-                                        CountTotal.setText(String.format("$%.2f", nuevoTotal));
                                     });
                                 });
+
+                                // Acción del botón Agregar
+                                addButton.setOnAction(event -> {
+                                    ModeloProducto productoSeleccionado = getTableView().getItems().get(getIndex());
+
+                                    // Solicitar la cantidad al usuario
+                                    String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad:");
+                                    if (cantidadStr != null && !cantidadStr.trim().isEmpty()) {
+                                        try {
+                                            int cantidad = Integer.parseInt(cantidadStr.trim());
+
+                                            // Lógica para agregar el producto al carrito
+                                            c.agregarProducto(productoSeleccionado, cantidad);  // Método que agrega el producto
+                                            c.guardarCarritoEnArchivo(NameUser.getText());  // Guarda el carrito en el archivo
+
+                                            // Confirmación al usuario
+                                            JOptionPane.showMessageDialog(null, "Producto agregado exitosamente al carrito!");
+
+                                            // Actualizar contador de productos en la interfaz
+                                            Platform.runLater(() -> {
+                                                int totalProductosActualizados = c.obtenerTotalProductosEnArchivo(user);
+                                                CountCardStore.setText(String.valueOf(totalProductosActualizados));
+                                            });
+                                        } catch (NumberFormatException e) {
+                                            JOptionPane.showMessageDialog(null, "Por favor ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        }
+                                    }
+                                });
+
+                                //Crear contenedor para los botones
+                                HBox buttonBox = new HBox(5, deleteButton, addButton);
+                                setGraphic(buttonBox); // Establecer el HBox como contenido de la celda
                             }
                         }
                     });
 
-                    // Calcular y mostrar el total inicial desde la tabla
-                    double totalInicial = calcularTotalDesdeTabla();
-                    CountTotal.setText(String.format("$%.2f", totalInicial));
                 });
             }
         };
@@ -141,60 +165,52 @@ public class VistacarritoController implements Initializable {
         scheduler.scheduleAtFixedRate(tarea, 0, 1, TimeUnit.SECONDS);
     }
 
-    private double calcularTotalDesdeTabla() {
-        double total = 0.0;
-        for (ModeloProducto producto : tableCardProducts.getItems()) {
-            total += producto.getPrice() * producto.getCantidadCarrito();
+    @FXML
+    private void ActionHome(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Vistatienda.fxml"));
+            Parent root = loader.load();
+
+            VistatiendaController controlador = loader.getController();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+
+            stage.setOnCloseRequest(e -> {
+                try {
+                    controlador.closeWindows2("/Vistas/VistaListaDeseos.fxml", home);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            Stage myStage = (Stage) this.home.getScene().getWindow();
+            myStage.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        return total;
     }
 
     @FXML
     private void ActioViewWishList(ActionEvent event) {
-        try {
-            // Cargar el archivo FXML de la vista de login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/VistaListaDeseos.fxml"));
-            Parent root = loader.load();
-
-            // Obtener el controlador de la nueva vista
-            VistaListaDeseosController controlador = loader.getController();
-
-            // Crear una nueva escena para la vista de login
-            Scene scene = new Scene(root);
-
-            // Crear un nuevo stage para la vista de login
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
-
-            // Indicar qué hacer al cerrar la ventana de login
-            stage.setOnCloseRequest(e -> {
-                try {
-                    controlador.closeWindows("/Vistas/Vistacarrito.fxml", CardStore);  // Llamar al método para reabrir el menú
-                } catch (IOException ex) {
-                    Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-
-            // Cerrar la ventana del menú actual
-            Stage myStage = (Stage) this.CardStore.getScene().getWindow();
-            myStage.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @FXML
     private void ActionPurchaseHistory(ActionEvent event) {
-         try {
+    }
+
+    @FXML
+    private void ActionViewCardStore(MouseEvent event) {
+        try {
             // Cargar el archivo FXML de la vista de login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Vistahistorial.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Vistacarrito.fxml"));
             Parent root = loader.load();
 
             // Obtener el controlador de la nueva vista
-            VistahistorialController controlador = loader.getController();
+            VistacarritoController controlador = loader.getController();
 
             // Crear una nueva escena para la vista de login
             Scene scene = new Scene(root);
@@ -208,7 +224,7 @@ public class VistacarritoController implements Initializable {
             // Indicar qué hacer al cerrar la ventana de login
             stage.setOnCloseRequest(e -> {
                 try {
-                    controlador.closeWindows("/Vistas/Vistacarrito.fxml", CardStore);  // Llamar al método para reabrir el menú
+                    controlador.closeWindows("/Vistas/VistaListaDeseos.fxml", CardStore);  // Llamar al método para reabrir el menú
                 } catch (IOException ex) {
                     Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -221,10 +237,6 @@ public class VistacarritoController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(VistaMenuController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @FXML
-    private void ActionViewCardStore(MouseEvent event) {
     }
 
     @FXML
@@ -248,67 +260,6 @@ public class VistacarritoController implements Initializable {
 
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void ActionHome(MouseEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Vistatienda.fxml"));
-            Parent root = loader.load();
-
-            VistatiendaController controlador = loader.getController();
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
-
-            stage.setOnCloseRequest(e -> {
-                try {
-                    controlador.closeWindows2("/Vistas/Vistacarrito.fxml", home);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            });
-
-            Stage myStage = (Stage) this.home.getScene().getWindow();
-            myStage.close();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void ActionMakePayment(ActionEvent event) {
-        Carrito carrito = new Carrito();
-        List<ModeloProducto> productosDelCarrito = carrito.obtenerProductosDelArchivo(user);
-
-        if (!productosDelCarrito.isEmpty()) {
-            HistorialCompras historial = new HistorialCompras();
-
-            // Agregar la compra al historial y generar la factura
-            historial.agregarCompra(productosDelCarrito, user);
-
-            // Generar archivo acumulativo de historial
-            String rutaArchivo = "historial_compras.txt";
-            historial.generarArchivo(rutaArchivo);
-
-            // Limpiar el carrito después del pago
-            carrito.vaciarCarrito(user);
-
-            // Actualizar la vista
-            Platform.runLater(() -> {
-                tableCardProducts.setItems(FXCollections.observableArrayList());
-                CountCardStore.setText("0");
-                CountTotal.setText("$0.00");
-            });
-
-            JOptionPane.showMessageDialog(null, "Purchase made successfully. History generated in: " + rutaArchivo);
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "The cart is empty. Payment cannot be made.");
         }
     }
 

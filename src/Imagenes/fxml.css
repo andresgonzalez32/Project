@@ -1,0 +1,10 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+    .button:hover {
+        -fx-background-color: #93D2F3; /* Cambia el color cuando haces hover */
+        
+    }
+}

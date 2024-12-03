@@ -86,6 +86,7 @@ public class VistaactualizarproductosController implements Initializable {
             // Crear un nuevo stage para la vista de login
             Stage stage = new Stage();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
 
             // Indicar qué hacer al cerrar la ventana de login
@@ -126,6 +127,7 @@ public class VistaactualizarproductosController implements Initializable {
             // Crear un nuevo stage para la vista de login
             Stage stage = new Stage();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
 
             stage.setOnCloseRequest(e -> {
